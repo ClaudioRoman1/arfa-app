@@ -131,9 +131,8 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
         localStorage.setItem('current_user', JSON.stringify(response.username));
         console.log('Datos guardados en localStorage');
       }
-
       this.currentUserSubject.next(response.username);
-
+      this.router.navigate(['/tabs']);
       console.log('Login procesado exitosamente');
     } catch (error) {
       console.error('Error al guardar datos de login:', error);

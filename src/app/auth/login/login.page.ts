@@ -58,16 +58,13 @@ export class LoginPage implements OnInit {
           username: this.email?.value,
           password: this.password?.value
         };
-        console.log("Credenciales: ",JSON.stringify(credentials))
         this.authService.login(credentials).subscribe({
           next: async (response) => {
 
               this.isLoading = false;
               // Mostrar mensaje de éxito
-              await this.showToast('Inicio de sesión exitoso', 'success');
 
               // Navegar a la página principal (tabs)
-              this.router.navigate(['/tabs'], { replaceUrl: true });
           },
           error: async (error) => {
             this.isLoading = false;
