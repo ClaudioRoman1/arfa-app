@@ -31,18 +31,9 @@ export class Auth {
     private platform: Platform
   ) {
     this.init();
-    this.configureApiUrl();
   }
 
-  private configureApiUrl() {
-    if (this.platform.is('hybrid')) {
-      // Para emulador/dispositivo móvil - usar IP directa
-      this.apiUrl = 'http://192.168.38.66:8080';
-    } else {
-      // Para navegador web - usar proxy (string vacío)
-      this.apiUrl = '';
-    }
-  }
+
 
   private async init() {
     try {
@@ -99,7 +90,6 @@ async loginWithCapacitor(credentials: LoginCredentials) {
         'Content-Type': 'application/json',
       }
     const response = await ((await CapacitorHttp.post({method:"POST",url,headers, data:credentials})))
-    console.log('Respuesta Capacitor Http:', response);
 
     if (response.status >= 200 && response.status < 300) {
       await this.handleLogin(response.data);
@@ -112,14 +102,10 @@ async loginWithCapacitor(credentials: LoginCredentials) {
     throw error;
   }
 }
-  private loginWithAngular(credentials: LoginCredentials): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
-
+private loginWithAngular(credentials: LoginCredentials): Observable<LoginResponse> {
+    const url = `${this.apiUrl}/api/auth/login`;
     console.log('Enviando petición con Angular HTTP a: /api/auth/login');
-    return this.http.post<any>('/api/auth/login', credentials, { headers }).pipe(
+    return this.http.post<LoginResponse>(url, credentials, ).pipe(
       tap(response => {
         console.log('Respuesta Angular HTTP:', response);
         this.handleLogin(response);
@@ -146,7 +132,6 @@ async loginWithCapacitor(credentials: LoginCredentials) {
         console.log('Datos guardados en localStorage');
       }
 
-      this.isAuthenticatedSubject.next(true);
       this.currentUserSubject.next(response.username);
 
       console.log('Login procesado exitosamente');

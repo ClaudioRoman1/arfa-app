@@ -3,8 +3,8 @@
 
     <!-- Branding -->
     <div class="logo-section">
-      <ion-img src="assets/logo-futbol.png"></ion-img>
-      <h1>Arfa Manager</h1>
+      <ion-img class="logo-img" src="assets/images/logo.png"></ion-img>
+      <!-- <h1>Arfa Manager</h1> -->
       <p>Inicia sesión para gestionar tus campeonatos</p>
     </div>
 
@@ -19,13 +19,13 @@
             <ion-label position="floating">Email</ion-label>
             <ion-input type="email" formControlName="email"></ion-input>
           </ion-item>
-          <ion-text  color="danger" *ngIf="email?.invalid && email?.touched">
-            <small *ngIf="email?.errors?.['required']">El email es requerido</small>
-            <small *ngIf="email?.errors?.['email']">Email inválido</small>
-          </ion-text>
+          <!-- <ion-text  color="danger" *ngIf="email?.invalid && email?.touched"> -->
+            <!-- <small *ngIf="email?.errors?.['required']">El email es requerido</small> -->
+            <!-- <small *ngIf="email?.errors?.['email']">Email inválido</small> -->
+          <!-- </ion-text> -->
 
           <!-- Password -->
-          <ion-item fill="outline">
+          <ion-item fill="outline" style="align-items: center;">
             <ion-icon slot="start" name="lock-closed-outline" color="medium"></ion-icon>
             <ion-label position="floating">Contraseña</ion-label>
             <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>

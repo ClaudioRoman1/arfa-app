@@ -60,11 +60,9 @@ export class LoginPage implements OnInit {
         };
         console.log("Credenciales: ",JSON.stringify(credentials))
         this.authService.login(credentials).subscribe({
-
           next: async (response) => {
-            console.log("Respuesta: ",JSON.stringify(response))
 
-            this.isLoading = false;
+              this.isLoading = false;
               // Mostrar mensaje de éxito
               await this.showToast('Inicio de sesión exitoso', 'success');
 
