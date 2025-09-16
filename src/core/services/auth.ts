@@ -30,12 +30,11 @@ export class Auth {
     private router: Router,
     private platform: Platform
   ) {
-    this.init();
   }
 
 
 
-  private async init() {
+  public async init() {
     try {
       await this.storage.create();
       this.storageReady = true;
@@ -73,7 +72,6 @@ export class Auth {
 
     if (this.platform.is('hybrid')) {
       // Usar CapacitorHttp para dispositivos móviles
-      console.log('Usando CapacitorHttp para dispositivo móvil');
       return from(this.loginWithCapacitor(credentials));
     } else {
       // Usar Angular HTTP para navegador web
@@ -90,7 +88,6 @@ async loginWithCapacitor(credentials: LoginCredentials) {
         'Content-Type': 'application/json',
       }
     const response = await ((await CapacitorHttp.post({method:"POST",url,headers, data:credentials})))
-
     if (response.status >= 200 && response.status < 300) {
       await this.handleLogin(response.data);
       return response.data;
@@ -109,6 +106,7 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
       tap(response => {
         console.log('Respuesta Angular HTTP:', response);
         this.handleLogin(response);
+
       })
     );
   }
@@ -128,12 +126,11 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
         console.log('Datos guardados en Ionic Storage');
       } else {
         localStorage.setItem('auth_token', response.token);
-        localStorage.setItem('current_user', JSON.stringify(response.username));
-        console.log('Datos guardados en localStorage');
+        localStorage.setItem('current_user',response.username);
       }
       this.currentUserSubject.next(response.username);
-      this.router.navigate(['/tabs']);
-      console.log('Login procesado exitosamente');
+      this.isAuthenticatedSubject.next(true);
+
     } catch (error) {
       console.error('Error al guardar datos de login:', error);
       throw error;
@@ -142,6 +139,7 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
 
   async logout() {
     try {
+      console.log('Styorage ready ',this.storageReady)
       if (this.storageReady) {
         await this.storage.remove('auth_token');
         await this.storage.remove('current_user');
@@ -149,14 +147,13 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
       } else {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('current_user');
-        console.log('Datos eliminados de localStorage');
       }
     } catch (error) {
       console.error('Error durante logout:', error);
     } finally {
       this.isAuthenticatedSubject.next(false);
       this.currentUserSubject.next(null);
-      this.router.navigate(['login'], { replaceUrl: true });
+      this.router.navigate(['/login'], { replaceUrl: true });
     }
   }
 

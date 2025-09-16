@@ -24,8 +24,9 @@ export class LoginPage implements OnInit {
     private toastController: ToastController
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initForm();
+    await this.authService.init();
   }
 
   initForm() {
@@ -60,11 +61,8 @@ export class LoginPage implements OnInit {
         };
         this.authService.login(credentials).subscribe({
           next: async (response) => {
-
               this.isLoading = false;
-              // Mostrar mensaje de éxito
-
-              // Navegar a la página principal (tabs)
+              this.router.navigate(['/tabs'],{replaceUrl:true});
           },
           error: async (error) => {
             this.isLoading = false;
