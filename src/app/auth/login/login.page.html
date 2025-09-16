@@ -1,0 +1,57 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+
+    <!-- Branding -->
+    <div class="logo-section">
+      <ion-img src="assets/logo-futbol.png"></ion-img>
+      <h1>Arfa Manager</h1>
+      <p>Inicia sesión para gestionar tus campeonatos</p>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <ion-card class="login-card">
+        <ion-card-content>
+
+          <!-- Email -->
+          <ion-item fill="outline">
+            <ion-icon slot="start" name="mail-outline" color="medium"></ion-icon>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-text  color="danger" *ngIf="email?.invalid && email?.touched">
+            <small *ngIf="email?.errors?.['required']">El email es requerido</small>
+            <small *ngIf="email?.errors?.['email']">Email inválido</small>
+          </ion-text>
+
+          <!-- Password -->
+          <ion-item fill="outline">
+            <ion-icon slot="start" name="lock-closed-outline" color="medium"></ion-icon>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
+            <ion-button fill="clear" slot="end" type="button" (click)="togglePassword()">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" color="medium"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-text color="danger" *ngIf="password?.invalid && password?.touched">
+            <!-- <small *ngIf="password?.errors?.['required']">La contraseña es requerida</small> -->
+            <!-- <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</small> -->
+          </ion-text>
+
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Botón login -->
+      <ion-button expand="block" color="success" type="submit" [disabled]="loginForm.invalid || isLoading" class="login-button">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+      </ion-button>
+    </form>
+
+    <!-- Links -->
+    <div class="additional-links">
+      <ion-button fill="clear" size="small" routerLink="/forgot-password">¿Olvidaste tu contraseña?</ion-button>
+      <ion-button fill="clear" size="small" routerLink="/register">Crear cuenta</ion-button>
+    </div>
+  </div>
+</ion-content>
