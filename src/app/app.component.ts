@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Auth } from 'src/core/services/auth';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private authService :Auth) {
+  }
+
+    get currentUser() : string | null {
+      return this.authService.getCurrentUser();
+    }
 }

@@ -16,4 +16,8 @@ export class TabsPage {
   }
 
 
+  get currentUser() : string | null {
+    return this.authService.getCurrentUser();
+  }
+
 }

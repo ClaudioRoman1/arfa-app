@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,   IonicStorageModule.forRoot({
       name: '__futbolmanager',
-      driverOrder: ['capacitorsqlite', 'indexeddb', 'localstorage'] // prioridad de drivers
+      driverOrder: ['sqlite', 'indexeddb', 'localstorage'] // prioridad de drivers
     }),
     HttpClientModule
   ],

@@ -66,10 +66,9 @@ export class LoginPage implements OnInit {
           },
           error: async (error) => {
             this.isLoading = false;
-            console.error('Error de login:', JSON.stringify(error));
 
             // Manejar diferentes tipos de errores
-            if (error.status === 401) {
+            if (error.status == 401) {
               this.errorMessage = 'Credenciales incorrectas';
             } else if (error.status === 0) {
               this.errorMessage = 'Error de conexión. Verifica tu internet.';

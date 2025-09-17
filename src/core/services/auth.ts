@@ -32,16 +32,12 @@ export class Auth {
   ) {
   }
 
-
-
   public async init() {
     try {
       await this.storage.create();
       this.storageReady = true;
-      console.log('Ionic Storage inicializado correctamente');
       await this.checkAuthStatus();
     } catch (error) {
-      console.warn('Error al inicializar Ionic Storage. Usando localStorage como fallback.', error);
       this.storageReady = false;
       await this.checkAuthStatus();
     }
@@ -50,15 +46,17 @@ export class Auth {
   private async checkAuthStatus() {
     let token: string | null = null;
     let user: User | null = null;
-
     if (this.storageReady) {
       token = await this.storage.get('auth_token');
       user = await this.storage.get('current_user');
     } else {
       token = localStorage.getItem('auth_token');
       const u = localStorage.getItem('current_user');
-      user = u ? JSON.parse(u) : null;
+      // user = u ? JSON.parse(u) : null;
     }
+    console.log('AQUI',  token)
+    console.log('AQUI',  user)
+
 
     if (token && user) {
       this.isAuthenticatedSubject.next(true);
@@ -80,29 +78,29 @@ export class Auth {
     }
   }
 
-async loginWithCapacitor(credentials: LoginCredentials) {
-  const url = `${this.apiUrl}/api/auth/login`;
-
-  try {
-    const headers = {
+  async loginWithCapacitor(credentials: LoginCredentials) {
+    const url = `${this.apiUrl}/api/auth/login`;
+    try {
+      const headers = {
         'Content-Type': 'application/json',
       }
-    const response = await ((await CapacitorHttp.post({method:"POST",url,headers, data:credentials})))
-    if (response.status >= 200 && response.status < 300) {
-      await this.handleLogin(response.data);
-      return response.data;
-    } else {
-      throw new Error(`HTTP ${response.status}: ${JSON.stringify(response.data)}`);
+      const response = await ((await CapacitorHttp.post({ method: "POST", url, headers, data: credentials })))
+      if (response.status >= 200 && response.status < 300) {
+        await this.handleLogin(response.data);
+        return response.data;
+      } else {
+        throw new Error(`HTTP ${response.status}: ${JSON.stringify(response.data)}`);
+      }
+    } catch (error) {
+      console.error('Error Capacitor Http:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error Capacitor Http:', error);
-    throw error;
   }
-}
-private loginWithAngular(credentials: LoginCredentials): Observable<LoginResponse> {
+
+  private loginWithAngular(credentials: LoginCredentials): Observable<LoginResponse> {
     const url = `${this.apiUrl}/api/auth/login`;
     console.log('Enviando petición con Angular HTTP a: /api/auth/login');
-    return this.http.post<LoginResponse>(url, credentials, ).pipe(
+    return this.http.post<LoginResponse>(url, credentials,).pipe(
       tap(response => {
         console.log('Respuesta Angular HTTP:', response);
         this.handleLogin(response);
@@ -126,7 +124,7 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
         console.log('Datos guardados en Ionic Storage');
       } else {
         localStorage.setItem('auth_token', response.token);
-        localStorage.setItem('current_user',response.username);
+        localStorage.setItem('current_user', response.username);
       }
       this.currentUserSubject.next(response.username);
       this.isAuthenticatedSubject.next(true);
@@ -139,7 +137,7 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
 
   async logout() {
     try {
-      console.log('Styorage ready ',this.storageReady)
+      console.log('Styorage ready ', this.storageReady)
       if (this.storageReady) {
         await this.storage.remove('auth_token');
         await this.storage.remove('current_user');
@@ -167,7 +165,7 @@ private loginWithAngular(credentials: LoginCredentials): Observable<LoginRespons
     return !!token;
   }
 
-  getCurrentUser(): User | null {
+  public getCurrentUser(): string | null {
     return this.currentUserSubject.value;
   }
 
