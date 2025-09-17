@@ -46,19 +46,22 @@ export class Auth {
   private async checkAuthStatus() {
     let token: string | null = null;
     let user: User | null = null;
+    let tokenRefresh : string | null = null;
     if (this.storageReady) {
       token = await this.storage.get('auth_token');
       user = await this.storage.get('current_user');
+      tokenRefresh = await this.storage.get('refresh_token');
     } else {
       token = localStorage.getItem('auth_token');
       const u = localStorage.getItem('current_user');
+      tokenRefresh = localStorage.getItem('refresh_token');
       // user = u ? JSON.parse(u) : null;
     }
     console.log('AQUI',  token)
     console.log('AQUI',  user)
 
 
-    if (token && user) {
+    if (token && user && tokenRefresh) {
       this.isAuthenticatedSubject.next(true);
       this.currentUserSubject.next(user);
     }
@@ -140,10 +143,12 @@ export class Auth {
       console.log('Styorage ready ', this.storageReady)
       if (this.storageReady) {
         await this.storage.remove('auth_token');
+        await this.storage.remove('refresh_token');
         await this.storage.remove('current_user');
         console.log('Datos eliminados de Ionic Storage');
       } else {
         localStorage.removeItem('auth_token');
+        localStorage.removeItem('refresh_token');
         localStorage.removeItem('current_user');
       }
     } catch (error) {
